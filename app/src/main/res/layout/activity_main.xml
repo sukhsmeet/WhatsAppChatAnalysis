@@ -20,79 +20,87 @@
 
     <!-- Contact Dropdown (Spinner) -->
 
-    <Spinner
-        android:id="@+id/contactSpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <!-- Map ImageView -->
-
-    <!-- Map Data TextView -->
-    <ImageView
-        android:id="@+id/mapImageView"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        android:contentDescription="Map Preview"
-        android:scaleType="fitCenter"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="@+id/uploadButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/graphDataText"
-         />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Spinner
+                android:id="@+id/contactSpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="68dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/mapImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:contentDescription="Map Preview"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/graphDataText" />
 
 
-    <TextView
-        android:id="@+id/mapDataText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:text="Total chats"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintBottom_toTopOf="@id/graphDataText"/>
+            <TextView
+                android:id="@+id/mapDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total chats"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/graphDataText"
+                app:layout_constraintStart_toStartOf="@+id/mapImageView"
+                tools:layout_editor_absoluteY="156dp" />
 
-    <ImageView
-        android:id="@+id/graphImageView"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="24dp"
-        android:contentDescription="Graph Preview"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/uploadButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mapImageView"/>
+            <ImageView
+                android:id="@+id/graphImageView"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:contentDescription="Graph Preview"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mapImageView" />
 
-    <TextView
-        android:id="@+id/graphDataText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Total Messages"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapDataText"
-        app:layout_constraintBottom_toTopOf="@id/mapImageView"/>
+            <TextView
+                android:id="@+id/graphDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:layout_marginEnd="60dp"
+                android:text="Total Messages"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contactSpinner" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/uploadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload File"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="607dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
