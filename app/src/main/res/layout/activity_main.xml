@@ -30,13 +30,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <Spinner
                 android:id="@+id/contactSpinner"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="68dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -44,54 +45,92 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/mapImageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:contentDescription="Map Preview"
-                android:scaleType="fitCenter"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/graphDataText" />
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/mapDataText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total chats"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/graphDataText"
-                app:layout_constraintStart_toStartOf="@+id/mapImageView"
-                tools:layout_editor_absoluteY="156dp" />
+    <TextView
+        android:id="@+id/mapDataText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total chats"
+        android:gravity="center"
+        android:padding="6dp"
+        android:layout_margin="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
 
-            <ImageView
-                android:id="@+id/graphImageView"
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:contentDescription="Graph Preview"
-                android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mapImageView" />
-
-            <TextView
+    <TextView
                 android:id="@+id/graphDataText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
-                android:layout_marginEnd="60dp"
+                android:gravity="center"
+                android:padding="6dp"
+                android:layout_margin="4dp"
                 android:text="Total Messages"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contactSpinner" />
+                android:textSize="14sp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/wordDataText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="6dp"
+        android:layout_margin="4dp"
+        android:text="Total Words"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/mediaDataText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="6dp"
+        android:layout_margin="4dp"
+        android:text="Total Media"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+</LinearLayout>
+
+            <ImageView
+                android:id="@+id/mapImageView"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:contentDescription="Map Preview"
+                android:scaleType="fitCenter"/>
+
+            <ImageView
+                android:id="@+id/graphImageView"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:contentDescription="Graph Preview"
+                android:scaleType="fitCenter"/>
+
+            <ImageView
+                android:id="@+id/chart3"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+
+            <ImageView
+                android:id="@+id/chart4"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+
+            <ImageView
+                android:id="@+id/chart5"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+
+            <ImageView
+                android:id="@+id/chart6"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+        </LinearLayout>
     </ScrollView>
 
     <Button
@@ -99,8 +138,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload File"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="647dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
