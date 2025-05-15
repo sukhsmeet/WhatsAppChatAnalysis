@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, result2.toString(), Toast.LENGTH_SHORT).show();
             String resultJson = result2.toString();
 
-            mapDataText.setText(resultJson);
+           // mapDataText.setText(resultJson);
         } catch (Exception e) {
             e.printStackTrace();
             //  resultTextView.setText("Error running Python: " + e.getMessage());
