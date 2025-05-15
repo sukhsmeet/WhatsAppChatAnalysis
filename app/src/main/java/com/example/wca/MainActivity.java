@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Button pickFileButton;
     Spinner spinner;
     PyObject globalResult;
-    ImageView chart_1;
+    ImageView chart_1, chart_2;
     private static final int FILE_PICKER_REQUEST = 1;
 
     @Override
@@ -49,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
         pickFileButton = findViewById(R.id.uploadButton);
         spinner = findViewById(R.id.contactSpinner);
         chart_1 = findViewById(R.id.mapImageView);
+        chart_2 = findViewById(R.id.graphImageView);
 
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
         }
 
-        Python py  = Python.getInstance();
+
 
 
 
@@ -167,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
                 chart_1.setImageBitmap(chartBitmap);
 
             }
+
+            PyObject wordcloud = stats.callAttr("create_wordcloud", user, globalResult);
+            byte[] imageBytes = android.util.Base64.decode(wordcloud.toString(), android.util.Base64.DEFAULT);
+            Bitmap wordcloudBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            chart_2.setImageBitmap(wordcloudBitmap);
 
             mapDataText.setText(output);
 

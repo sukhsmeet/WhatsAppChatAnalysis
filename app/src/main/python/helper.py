@@ -62,7 +62,7 @@ def create_wordcloud(selected_user,df):
         
          
     temp =df[df['Message'] != '<Media omitted>']
-    f = open('D:\VS Code\ML\Whatsapp Chat Analysis\stop_hinglish.txt','r')
+    f = open('stop_hinglish.txt','r')
     stop_words = f.read()
     
     def remove_stopwords(message):
@@ -74,8 +74,12 @@ def create_wordcloud(selected_user,df):
         
     wc = WordCloud(width=500,height=500,min_font_size=10,background_color='white')
     temp['Message'] = temp['Message'].apply(remove_stopwords)
-    df_wc = wc.generate(temp['Message'].str.cat(sep = " "))   
-    return df_wc
+    df_wc = wc.generate(temp['Message'].str.cat(sep = " "))
+
+    buffer = BytesIO()
+    df_wc.to_image().save(buffer, format="PNG")
+    img_str = base64.b64encode(buffer.getvalue()).decode()
+    return img_str
 
 def most_common_words(selected_user,df):
     if selected_user != "Overall":
