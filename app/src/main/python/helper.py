@@ -3,18 +3,24 @@ from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 import emoji
+import matplotlib.pyplot as plt
+import io
+import base64
 
 extracter = URLExtract()
+
+def users(data):
+    return data['Sender'].unique().tolist()
 
 def fetch_stats(selected_user,df):
     
     if selected_user != "Overall":
-        df = df[df['user'] == selected_user]
+        df = df[df['Sender'] == selected_user]
         
     # number of msgs
-        num_msgs = df.shape[0]
+    num_msgs = df.shape[0]
         # number of words
-        words = []
+    words = []
     for message in df['Message']:
         words.extend(message.split())
         
@@ -29,15 +35,30 @@ def fetch_stats(selected_user,df):
 
 
 def most_busy_user(df):
-    x = df['user'].value_counts().head()
+    x = df['Sender'].value_counts().head()
     percent_df = round((df['Sender'].value_counts()/df.shape[0])*100,2).reset_index().rename(columns={'count':'Percent'})
-    return x,percent_df
+    plt.figure(figsize=(10, 8))
+    plt.bar(x.index, x.values, color='skyblue')
+    plt.title("Most Busy Users")
+    plt.xlabel('Labels')
+    plt.ylabel('Values')
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    plt.close()
+    buf.seek(0)
+
+    img_bytes = buf.read()
+    encoded = base64.b64encode(img_bytes).decode('utf-8')
+    return encoded
+    #return x,percent_df
 
 
 
 def create_wordcloud(selected_user,df):
     if selected_user != "Overall":
-        df = df[df['user'] == selected_user]
+        df = df[df['Sender'] == selected_user]
         
          
     temp =df[df['Message'] != '<Media omitted>']
