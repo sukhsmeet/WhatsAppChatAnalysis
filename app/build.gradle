@@ -18,14 +18,18 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
+
         python {
+
             pip {
+                install "setuptools>=68.0.0"
+                install "seaborn==0.12.0"
+                install "wheel"
                 install "matplotlib"
                 install "pandas"
                 install "urlextract"
                 install "wordcloud"
                 install "emoji"
-                install "numpy"
             }
         }
     }

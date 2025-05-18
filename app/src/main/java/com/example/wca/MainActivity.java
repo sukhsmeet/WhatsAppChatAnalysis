@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,13 +33,15 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
-    TextView mapDataText;
+    TextView mapDataText,totalwords,totalMedia,totalLinks,mostbusyUser;
     Button pickFileButton;
     Spinner spinner;
     PyObject globalResult;
-    ImageView chart_1, chart_2;
+    ImageView chart_1, chart_2, chart_3, chart_4, chart_5, chart_6, chart_7, chart_8, chart_9;
     private static final int FILE_PICKER_REQUEST = 1;
 
     @Override
@@ -46,10 +50,23 @@ public class MainActivity extends AppCompatActivity {
        // EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         mapDataText = findViewById(R.id.mapDataText);
+        totalwords = findViewById(R.id.totalwordText);
+        totalMedia = findViewById(R.id.totalmediaText);
+        totalLinks = findViewById(R.id.totallinksText);
         pickFileButton = findViewById(R.id.uploadButton);
+        mostbusyUser = findViewById(R.id.mostBusyUser);
         spinner = findViewById(R.id.contactSpinner);
         chart_1 = findViewById(R.id.mapImageView);
         chart_2 = findViewById(R.id.graphImageView);
+        chart_3 = findViewById(R.id.chart3);
+        chart_4 = findViewById(R.id.chart4);
+        chart_5 = findViewById(R.id.chart5);
+        chart_6 = findViewById(R.id.chart6);
+        chart_7 = findViewById(R.id.chart7);
+        chart_8 = findViewById(R.id.chart8);
+        chart_9 = findViewById(R.id.chart9);
+
+        mostbusyUser.setVisibility(View.GONE);
 
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
@@ -143,44 +160,77 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void updateStatsForUser(String user) {
-        try {
-            Python py = Python.getInstance();
-            PyObject stats = py.getModule("helper");
-            PyObject result2 = stats.callAttr("fetch_stats", user, globalResult);
-            List<PyObject> values = result2.asList();
+        Executor executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-            String TotalChats = values.get(0).toString();
-            String TotalWords = values.get(1).toString();
-            String TotalMedia = values.get(2).toString();
-            String TotalLinks = values.get(3).toString();
+        executor.execute(() -> {
+            try {
+                Python py = Python.getInstance();
+                PyObject stats = py.getModule("helper");
+                PyObject result2 = stats.callAttr("fetch_stats", user, globalResult);
+                List<PyObject> values = result2.asList();
 
-            String output = "Stats for " + user + ":\n\n"
-                    + "Total Messages: " + TotalChats + "\n"
-                    + "Total Words: " + TotalWords + "\n"
-                    + "Media Shared: " + TotalMedia + "\n"
-                    + "Links Shared: " + TotalLinks;
+                String TotalChats = values.get(0).toString();
+                String TotalWords = values.get(1).toString();
+                String TotalMedia = values.get(2).toString();
+                String TotalLinks = values.get(3).toString();
 
-            if(Objects.equals(user, "Overall")){
-                PyObject encodedImage = stats.callAttr("most_busy_user", globalResult);
-                byte[] imageBytes = android.util.Base64.decode(encodedImage.toString(), android.util.Base64.DEFAULT);
-                Bitmap chartBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                String tempTotalChats = "Total Chats:\n" + TotalChats;
+                String tempTotalWords = "Total Words:\n" + TotalWords;
+                String tempTotalMedia = "Total Media:\n" + TotalMedia;
+                String tempTotalLinks = "Total Links:\n" + TotalLinks;
 
-                chart_1.setImageBitmap(chartBitmap);
+                Bitmap chartBitmap = null;
+                if (Objects.equals(user, "Overall")) {
+                    PyObject encodedImage = stats.callAttr("most_busy_user", globalResult);
+                    byte[] imageBytes = android.util.Base64.decode(encodedImage.toString(), android.util.Base64.DEFAULT);
+                    chartBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                    mostbusyUser.setVisibility(View.VISIBLE);
+                }
 
+                PyObject[] chartFunctions = {
+                        stats.callAttr("create_wordcloud", user, globalResult),
+                        stats.callAttr("most_common_words", user, globalResult),
+                        stats.callAttr("emoji_helper", user, globalResult),
+                        stats.callAttr("monthly_timeline", user, globalResult),
+                        stats.callAttr("daily_timeline", user, globalResult),
+                        stats.callAttr("week_activity", user, globalResult),
+                        stats.callAttr("month_activity", user, globalResult),
+                        stats.callAttr("activity_heatmap", user, globalResult)
+                };
+
+                Bitmap[] bitmaps = new Bitmap[chartFunctions.length];
+                for (int i = 0; i < chartFunctions.length; i++) {
+                    byte[] imgBytes = android.util.Base64.decode(chartFunctions[i].toString(), android.util.Base64.DEFAULT);
+                    bitmaps[i] = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
+                }
+
+                Bitmap finalChartBitmap = chartBitmap;
+                handler.post(() -> {
+                    mapDataText.setText(tempTotalChats);
+                    totalwords.setText(tempTotalWords);
+                    totalMedia.setText(tempTotalMedia);
+                    totalLinks.setText(tempTotalLinks);
+
+                    chart_1.setImageBitmap(finalChartBitmap);
+                    chart_2.setImageBitmap(bitmaps[0]);
+                    chart_3.setImageBitmap(bitmaps[1]);
+                    chart_4.setImageBitmap(bitmaps[2]);
+                    chart_5.setImageBitmap(bitmaps[3]);
+                    chart_6.setImageBitmap(bitmaps[4]);
+                    chart_7.setImageBitmap(bitmaps[5]);
+                    chart_8.setImageBitmap(bitmaps[6]);
+                    chart_9.setImageBitmap(bitmaps[7]);
+
+                    if (finalChartBitmap == null && !Objects.equals(user, "Overall")) {
+                        chart_1.setImageBitmap(null); // Hide chart_1 for individual users
+                    }
+                });
+
+            } catch (Exception e) {
+                handler.post(() -> mapDataText.setText("Error fetching user stats: " + e.getMessage()));
             }
-
-            PyObject wordcloud = stats.callAttr("create_wordcloud", user, globalResult);
-            byte[] imageBytes = android.util.Base64.decode(wordcloud.toString(), android.util.Base64.DEFAULT);
-            Bitmap wordcloudBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-            chart_2.setImageBitmap(wordcloudBitmap);
-
-            mapDataText.setText(output);
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mapDataText.setText("Error fetching user stats: " + e.getMessage());
-        }
+        });
     }
+
 }
