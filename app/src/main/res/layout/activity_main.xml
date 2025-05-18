@@ -39,12 +39,11 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
+        app:layout_constraintBottom_toTopOf="@+id/uploadButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintBottom_toTopOf="@+id/uploadButton">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,180 +54,208 @@
                 android:id="@+id/contactSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="68dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/scrollView2" />
+                android:layout_margin="10dp" />
 
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_gravity="center_horizontal">
-
-    <TextView
-        android:id="@+id/mapDataText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total Messages"
-        android:gravity="center"
-        android:padding="6dp"
-        android:layout_margin="4dp"
-        android:textColor="@android:color/black"
-        android:textSize="14sp" />
-
-    <TextView
-                android:id="@+id/totalwordText"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="6dp"
-                android:layout_margin="4dp"
-                android:text="Total Words"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/totalmediaText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="6dp"
-        android:layout_margin="4dp"
-        android:text="Total Media"
-        android:textColor="@android:color/black"
-        android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/mapDataText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="Total Messages"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/totallinksText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="6dp"
-        android:layout_margin="4dp"
-        android:text="Total Links"
-        android:textColor="@android:color/black"
-        android:textSize="14sp" />
-</LinearLayout>
+                <TextView
+                    android:id="@+id/totalwordText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="Total Words"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/totalmediaText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="Total Media"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/totallinksText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="Total Links"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/mostBusyUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Most Busy User"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/mapImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/wordcloud"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Word Cloud"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/graphImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="Graph Preview"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/commonWords"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Most Common Words"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/chart3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/emojiAnalysis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Emoji Analysis"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/chart4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/monthlyTimeline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Monthly Timeline"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/chart5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/dailyTimeline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Daily Timeline"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/chart6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/weekActivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Week Activity"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/chart7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/monthActivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Month Activity"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/chart8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/heatMap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="6dp"
                 android:text="Heat Map"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/chart9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
         </LinearLayout>
     </ScrollView>
 
@@ -237,6 +264,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload File"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView2"
