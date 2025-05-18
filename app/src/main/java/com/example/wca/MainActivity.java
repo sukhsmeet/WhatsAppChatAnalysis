@@ -23,6 +23,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
@@ -37,10 +38,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
-    TextView mapDataText,totalwords,totalMedia,totalLinks,mostbusyUser;
+    TextView mapDataText,totalwords,totalMedia,totalLinks,mostbusyUser,wordcloud,emojiAnalysis,monthlyTimeline,dailyTimeline,weekActivity,monthActivity,heatMap;
     Button pickFileButton;
     Spinner spinner;
     PyObject globalResult;
+    LottieAnimationView lottieAnimationView;
     ImageView chart_1, chart_2, chart_3, chart_4, chart_5, chart_6, chart_7, chart_8, chart_9;
     private static final int FILE_PICKER_REQUEST = 1;
 
@@ -53,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         totalwords = findViewById(R.id.totalwordText);
         totalMedia = findViewById(R.id.totalmediaText);
         totalLinks = findViewById(R.id.totallinksText);
+        wordcloud = findViewById(R.id.wordcloud);
+        emojiAnalysis = findViewById(R.id.emojiAnalysis);
+        monthlyTimeline = findViewById(R.id.monthlyTimeline);
+        dailyTimeline = findViewById(R.id.dailyTimeline);
+        weekActivity = findViewById(R.id.weekActivity);
+        monthActivity = findViewById(R.id.monthActivity);
+        heatMap = findViewById(R.id.heatMap);
         pickFileButton = findViewById(R.id.uploadButton);
         mostbusyUser = findViewById(R.id.mostBusyUser);
         spinner = findViewById(R.id.contactSpinner);
@@ -65,8 +74,17 @@ public class MainActivity extends AppCompatActivity {
         chart_7 = findViewById(R.id.chart7);
         chart_8 = findViewById(R.id.chart8);
         chart_9 = findViewById(R.id.chart9);
+        lottieAnimationView = findViewById(R.id.lottieLoader);
 
         mostbusyUser.setVisibility(View.GONE);
+        wordcloud.setVisibility(View.GONE);
+        emojiAnalysis.setVisibility(View.GONE);
+        monthlyTimeline.setVisibility(View.GONE);
+        dailyTimeline.setVisibility(View.GONE);
+        weekActivity.setVisibility(View.GONE);
+        monthActivity.setVisibility(View.GONE);
+        heatMap.setVisibility(View.GONE);
+
 
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
@@ -74,9 +92,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
+        lottieAnimationView.bringToFront();
+        lottieAnimationView.setVisibility(View.GONE);
         pickFileButton.setOnClickListener(view -> {
+            lottieAnimationView.setVisibility(View.VISIBLE);
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");  // Show all files
             String[] mimeTypes = {"text/plain"};
@@ -92,26 +111,71 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == FILE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
-            try (InputStream inputStream = getContentResolver().openInputStream(uri);
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    stringBuilder.append(line).append("\n");
+            // Run on background thread
+            Executor executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            executor.execute(() -> {
+                try (InputStream inputStream = getContentResolver().openInputStream(uri);
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+
+                    String chatText = stringBuilder.toString();
+
+                    Python py = Python.getInstance();
+                    PyObject pyObj = py.getModule("preprocesser");
+                    globalResult = pyObj.callAttr("preprocess", chatText);
+
+                    PyObject senders = py.getModule("helper")
+                            .callAttr("users", globalResult);
+                    List<PyObject> sendersList = senders.asList();
+                    sendersList.add(PyObject.fromJava("Overall"));
+
+                    List<String> senderNames = new ArrayList<>();
+                    for (PyObject sender : sendersList) {
+                        senderNames.add(sender.toString());
+                    }
+
+                    handler.post(() -> {
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                MainActivity.this,
+                                android.R.layout.simple_spinner_item,
+                                senderNames
+                        );
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(adapter);
+
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                String selectedUser = senderNames.get(position);
+                                Toast.makeText(MainActivity.this, "Selected User: " + selectedUser, Toast.LENGTH_SHORT).show();
+                                updateStatsForUser(selectedUser);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {}
+                        });
+                    });
+
+                } catch (Exception e) {
+                    handler.post(() -> {
+                        mapDataText.setText("Error reading file: " + e.getMessage());
+                    });
                 }
-
-                String chatText = stringBuilder.toString();
-                processChatWithPython(chatText);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                mapDataText.setText("Error reading file: " + e.getMessage());
-            }
+            });
         }
     }
+
 
     private void processChatWithPython(String chatText) {
         try {
@@ -160,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void updateStatsForUser(String user) {
+        lottieAnimationView.setVisibility(View.VISIBLE);
         Executor executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
@@ -185,9 +250,9 @@ public class MainActivity extends AppCompatActivity {
                     PyObject encodedImage = stats.callAttr("most_busy_user", globalResult);
                     byte[] imageBytes = android.util.Base64.decode(encodedImage.toString(), android.util.Base64.DEFAULT);
                     chartBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-                    mostbusyUser.setVisibility(View.VISIBLE);
                 }
 
+                // Prepare chart bitmaps
                 PyObject[] chartFunctions = {
                         stats.callAttr("create_wordcloud", user, globalResult),
                         stats.callAttr("most_common_words", user, globalResult),
@@ -206,31 +271,52 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Bitmap finalChartBitmap = chartBitmap;
+
                 handler.post(() -> {
-                    mapDataText.setText(tempTotalChats);
-                    totalwords.setText(tempTotalWords);
-                    totalMedia.setText(tempTotalMedia);
-                    totalLinks.setText(tempTotalLinks);
+                    try {
+                        mapDataText.setText(tempTotalChats);
+                        totalwords.setText(tempTotalWords);
+                        totalMedia.setText(tempTotalMedia);
+                        totalLinks.setText(tempTotalLinks);
 
-                    chart_1.setImageBitmap(finalChartBitmap);
-                    chart_2.setImageBitmap(bitmaps[0]);
-                    chart_3.setImageBitmap(bitmaps[1]);
-                    chart_4.setImageBitmap(bitmaps[2]);
-                    chart_5.setImageBitmap(bitmaps[3]);
-                    chart_6.setImageBitmap(bitmaps[4]);
-                    chart_7.setImageBitmap(bitmaps[5]);
-                    chart_8.setImageBitmap(bitmaps[6]);
-                    chart_9.setImageBitmap(bitmaps[7]);
+                        wordcloud.setVisibility(View.VISIBLE);
+                        emojiAnalysis.setVisibility(View.VISIBLE);
+                        monthlyTimeline.setVisibility(View.VISIBLE);
+                        dailyTimeline.setVisibility(View.VISIBLE);
+                        weekActivity.setVisibility(View.VISIBLE);
+                        monthActivity.setVisibility(View.VISIBLE);
+                        heatMap.setVisibility(View.VISIBLE);
 
-                    if (finalChartBitmap == null && !Objects.equals(user, "Overall")) {
-                        chart_1.setImageBitmap(null); // Hide chart_1 for individual users
+                        if (Objects.equals(user, "Overall") && finalChartBitmap != null) {
+                            chart_1.setImageBitmap(finalChartBitmap);
+                            mostbusyUser.setVisibility(View.VISIBLE);
+                        } else {
+                            chart_1.setImageBitmap(null);
+                            mostbusyUser.setVisibility(View.GONE);
+                        }
+
+                        chart_2.setImageBitmap(bitmaps[0]);
+                        chart_3.setImageBitmap(bitmaps[1]);
+                        chart_4.setImageBitmap(bitmaps[2]);
+                        chart_5.setImageBitmap(bitmaps[3]);
+                        chart_6.setImageBitmap(bitmaps[4]);
+                        chart_7.setImageBitmap(bitmaps[5]);
+                        chart_8.setImageBitmap(bitmaps[6]);
+                        chart_9.setImageBitmap(bitmaps[7]);
+                        lottieAnimationView.setVisibility(View.GONE);
+
+                    } catch (Exception uiEx) {
+                        mapDataText.setText("Error updating UI: " + uiEx.getMessage());
                     }
                 });
 
             } catch (Exception e) {
-                handler.post(() -> mapDataText.setText("Error fetching user stats: " + e.getMessage()));
+                handler.post(() -> {
+                    mapDataText.setText("Error fetching user stats: " + e.getMessage());
+                });
             }
         });
     }
+
 
 }
